@@ -53,13 +53,7 @@ jobs:
           HEADLESS: "true"
         run: pytest -n auto --browser-engine=${{ matrix.browser }}
 
-      - name: Generate Allure report
-        if: always()
-        uses: simple-elf/allure-report-action@v1.9
-        with:
-          allure_results: reports/allure
-          allure_history: allure-history
-
+      
       - name: Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4
