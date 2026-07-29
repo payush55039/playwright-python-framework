@@ -105,4 +105,4 @@ class WaitHelper:
                 raise ElementNotFoundError(
                     f"Expected {expected_count} elements, found {actual}"
                 ) from exc
-            
+
