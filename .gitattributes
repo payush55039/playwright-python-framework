@@ -1,0 +1,16 @@
+* text=auto eol=lf
+
+*.py text diff=python
+*.json text
+*.yaml text
+*.yml text
+*.md text
+*.ini text
+*.toml text
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.zip binary
+*.webm binary
+*.mp4 binary

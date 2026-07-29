@@ -1,0 +1,86 @@
+name: Playwright Test Suite
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: "Browser engine to run against"
+        required: false
+        default: "chromium"
+        type: choice
+        options: [chromium, firefox, webkit]
+
+jobs:
+  test:
+    name: Run Tests (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Install Playwright browsers
+        run: playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Lint with Ruff
+        run: ruff check .
+
+      - name: Check formatting with Black
+        run: black --check .
+
+      - name: Run test suite
+        env:
+          BROWSER: ${{ matrix.browser }}
+          HEADLESS: "true"
+        run: pytest -n auto --browser-engine=${{ matrix.browser }}
+
+      - name: Generate Allure report
+        if: always()
+        uses: simple-elf/allure-report-action@v1.9
+        with:
+          allure_results: reports/allure
+          allure_history: allure-history
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report-${{ matrix.browser }}
+          path: reports/html/
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.browser }}
+          path: reports/allure/
+
+      - name: Upload logs, screenshots, videos, and traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-artifacts-${{ matrix.browser }}
+          path: |
+            reports/logs/
+            reports/screenshots/
+            reports/videos/
+            reports/traces/
