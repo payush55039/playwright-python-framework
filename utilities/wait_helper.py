@@ -63,9 +63,9 @@ class WaitHelper:
 
         if fragment not in self._page.url:
             raise ElementNotFoundError(
-            f"URL never contained expected fragment '{fragment}'. "
-            f"Current URL: {self._page.url}"
-        )
+                f"URL never contained expected fragment '{fragment}'. "
+                f"Current URL: {self._page.url}"
+            )
 
     def wait_for_load_state(self, state: str = "load", timeout: int | None = None) -> None:
         """Wait for a Playwright page load state: 'load', 'domcontentloaded', 'networkidle'."""
@@ -105,4 +105,3 @@ class WaitHelper:
                 raise ElementNotFoundError(
                     f"Expected {expected_count} elements, found {actual}"
                 ) from exc
-

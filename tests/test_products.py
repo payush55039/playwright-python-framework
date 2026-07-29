@@ -54,6 +54,8 @@ def test_verify_every_product_has_visible_image(authenticated_inventory: Invento
     assert images.count() == EXPECTED_PRODUCT_COUNT
     for index in range(images.count()):
         assert images.nth(index).is_visible()
+
+
 def test_verify_every_product_has_non_empty_description(
     authenticated_inventory: InventoryPage,
 ) -> None:
